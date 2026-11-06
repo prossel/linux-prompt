@@ -92,6 +92,21 @@ START='# >>> linux-prompt >>>'
 END='# <<< linux-prompt <<<' 
 for rc in "$HOME/.bashrc" "$HOME/.zshrc"; do
   [ -f "$rc" ] || : > "$rc"
+  if ! grep -Fq '# >>> linux-prompt locale >>>' "$rc"; then
+    temp_rc=$(mktemp)
+    {
+      cat <<'RC'
+# >>> linux-prompt locale >>>
+if [ "${LANG-}" = C ]; then
+  export LANG=C.UTF-8
+fi
+# <<< linux-prompt locale <<<
+RC
+      cat "$rc"
+    } > "$temp_rc"
+    cat "$temp_rc" > "$rc"
+    rm -f "$temp_rc"
+  fi
   if ! grep -Fq "$START" "$rc"; then
     cat >> "$rc" <<'RC'
 
