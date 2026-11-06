@@ -127,6 +127,43 @@ RC
   fi
 done
 
+if [ -f "$HOME/.bash_profile" ]; then
+  bash_profile="$HOME/.bash_profile"
+elif [ -f "$HOME/.profile" ]; then
+  bash_profile="$HOME/.profile"
+else
+  bash_profile=
+fi
+
+if [ -n "$bash_profile" ]; then
+  if grep -Ev '^[[:space:]]*#' "$bash_profile" |
+    grep -Eq '(^|[;&[:space:]])(source|\.)[[:space:]]+([^#]*)(\$HOME/|~/)?\.bashrc([^[:alnum:]_]|$)'; then
+    echo "Le profil Bash $bash_profile charge déjà .bashrc."
+  else
+    source_line='if [ -n "${BASH_VERSION-}" ] && [ -f "$HOME/.bashrc" ]; then . "$HOME/.bashrc"; fi'
+    if [ -t 0 ] || [ -t 2 ]; then
+      printf 'Le profil Bash %s ne charge pas .bashrc. Ajouter la ligne ? [y/N] ' "$bash_profile" >&2
+      if [ -t 0 ]; then
+        IFS= read -r answer || answer=
+      else
+        IFS= read -r answer </dev/tty || answer=
+      fi
+      case "$answer" in
+        y|Y|yes|YES|Yes)
+          printf '\n# Added by linux-prompt installer\n%s\n' "$source_line" >> "$bash_profile"
+          echo "Ajout de l'appel à .bashrc dans $bash_profile."
+          ;;
+        *)
+          echo "Aucun changement apporté à $bash_profile."
+          ;;
+      esac
+    else
+      printf 'Proposition : ajoute cette ligne à %s pour charger .bashrc dans les shells Bash de connexion :\n%s\n' \
+        "$bash_profile" "$source_line"
+    fi
+  fi
+fi
+
 echo "Installation terminée. Accent : $ACCENT"
 echo 'Ouvre un nouveau shell interactif (ou exécute: exec bash / exec zsh).'
 echo 'Note: cette configuration concerne uniquement le compte utilisateur courant.'

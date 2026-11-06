@@ -27,6 +27,7 @@ Exemples de couleurs : `#38BDF8` (bleu), `#34D399` (vert), `#FBBF24` (orange), `
 - Espacement entre blocs de commandes.
 - Sans Nerd Font obligatoire.
 - Ajout non destructif des blocs d'initialisation à `~/.bashrc` et `~/.zshrc`.
+- Si `~/.bash_profile` ou `~/.profile` existe sans charger `~/.bashrc`, l'installateur propose de l'ajouter.
 - Installation de Starship localement sous `~/.local/bin`, sans sudo.
 - Relance de l'installateur avec une autre couleur pour changer l'accent.
 
