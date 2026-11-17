@@ -80,8 +80,8 @@ min_time = 2000
 format = ' [took $duration](dimmed yellow)'
 
 [character]
-success_symbol = '[❯](bold ACCENT_COLOR)'
-error_symbol = '[❯](bold red)'
+success_symbol = '[>](bold ACCENT_COLOR)'
+error_symbol = '[>](bold red)'
 TOML
 # ACCENT must be validated above before substitution.
 sed "s/ACCENT_COLOR/$ACCENT/g" "$CONF" > "$CONF.tmp"
