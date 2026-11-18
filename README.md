@@ -24,7 +24,7 @@ curl -fsSL https://raw.githubusercontent.com/prossel/linux-prompt/main/install.s
 
 ## Interactive color preview
 
-Open the [interactive color preview](index.html) in a browser to choose an accent color, see it applied to an example prompt, and copy the matching installation command.
+Open the [interactive color preview](https://prossel.github.io/linux-prompt/) in a browser to choose an accent color, see it applied to an example prompt, and copy the matching installation command.
 
 Color examples: `#00BB00` (default green), `#38BDF8` (blue), `#34D399` (mint), `#FBBF24` (orange), `#C4B5FD` (purple), `#FB7185` (pink).
 
