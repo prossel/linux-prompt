@@ -2,8 +2,8 @@
 set -eu
 
 # Usage: sh install.sh [COLOR]
-# Example: sh install.sh '#38BDF8'
-ACCENT=${1:-#38BDF8}
+# Example: sh install.sh '#00BB00'
+ACCENT=${1:-#00BB00}
 case "$ACCENT" in
   \#[0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f]) ;;
   *) echo "Error: expected a color in '#RRGGBB' format." >&2; exit 2 ;;

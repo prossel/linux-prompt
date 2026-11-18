@@ -4,30 +4,29 @@ A two-line Bash/Zsh prompt, with a machine-specific accent color and Git informa
 
 For example, in a Git repository:
 
-```text
-┌─alice@workstation  ~/projects/linux-prompt ⎇ main
-└─>
-```
+![Linux Prompt example on a dark background](prompt-preview-dark.png)
+
+![Linux Prompt example on a light background](prompt-preview-light.png)
 
 The username, hostname, and prompt symbol use the chosen accent color; the directory and branch use blue and purple.
 
 ## Local installation
 
 ```sh
-sh install.sh '#38BDF8'
+sh install.sh '#00BB00'
 ```
 
 ## Installation from the GitHub repository
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/prossel/linux-prompt/main/install.sh | sh -s -- '#38BDF8'
+curl -fsSL https://raw.githubusercontent.com/prossel/linux-prompt/main/install.sh | sh -s -- '#00BB00'
 ```
 
 ## Interactive color preview
 
 Open the [interactive color preview](index.html) in a browser to choose an accent color, see it applied to an example prompt, and copy the matching installation command.
 
-Color examples: `#38BDF8` (blue), `#34D399` (green), `#FBBF24` (orange), `#C4B5FD` (purple), `#FB7185` (pink).
+Color examples: `#00BB00` (default green), `#38BDF8` (blue), `#34D399` (mint), `#FBBF24` (orange), `#C4B5FD` (purple), `#FB7185` (pink).
 
 ## Features
 
