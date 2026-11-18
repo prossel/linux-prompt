@@ -2,6 +2,15 @@
 
 A two-line Bash/Zsh prompt, with a machine-specific accent color and Git information.
 
+For example, in a Git repository:
+
+```text
+┌─alice@workstation  ~/projects/linux-prompt ⎇ main
+└─>
+```
+
+The username, hostname, and prompt symbol use the chosen accent color; the directory and branch use blue and purple.
+
 ## Local installation
 
 ```sh
