@@ -1,40 +1,40 @@
-# Linux Prompt — Starship personnalisé
+# Linux Prompt — Customized Starship Prompt
 
-Un prompt Bash/Zsh à deux lignes, coloré par machine et enrichi avec les informations Git.
+A two-line Bash/Zsh prompt, with a machine-specific accent color and Git information.
 
-## Installation locale
+## Local installation
 
 ```sh
 sh install.sh '#38BDF8'
 ```
 
-## Installation depuis ton dépôt GitHub
+## Installation from your GitHub repository
 
-Après avoir publié `install.sh` à la racine d'un dépôt public `linux-prompt` :
+After publishing `install.sh` at the root of a public `linux-prompt` repository:
 
 ```sh
 curl -fsSL https://raw.githubusercontent.com/prossel/linux-prompt/main/install.sh | sh -s -- '#38BDF8'
 ```
 
-Exemples de couleurs : `#38BDF8` (bleu), `#34D399` (vert), `#FBBF24` (orange), `#C4B5FD` (violet), `#FB7185` (rose).
+Color examples: `#38BDF8` (blue), `#34D399` (green), `#FBBF24` (orange), `#C4B5FD` (purple), `#FB7185` (pink).
 
-## Fonctionnalités
+## Features
 
-- Utilisateur et nom du serveur toujours visibles.
-- Répertoire actuel, branche et état Git.
-- Durée des commandes de plus de 2 secondes.
-- Symbole rouge si la commande précédente a échoué.
-- Espacement entre blocs de commandes.
-- Sans Nerd Font obligatoire.
-- Ajout non destructif des blocs d'initialisation à `~/.bashrc` et `~/.zshrc`.
-- Si `~/.bash_profile` ou `~/.profile` existe sans charger `~/.bashrc`, l'installateur propose de l'ajouter.
-- Installation de Starship localement sous `~/.local/bin`, sans sudo.
-- Relance de l'installateur avec une autre couleur pour changer l'accent.
+- Always-visible username and hostname.
+- Current directory, branch, and Git status.
+- Duration for commands that take more than 2 seconds.
+- Red symbol if the previous command failed.
+- Spacing between command blocks.
+- No Nerd Font required.
+- Non-destructive addition of initialization blocks to `~/.bashrc` and `~/.zshrc`.
+- If `~/.bash_profile` or `~/.profile` exists but does not load `~/.bashrc`, the installer offers to add it.
+- Installs Starship locally under `~/.local/bin`, without `sudo`.
+- Rerun the installer with a different color to change the accent.
 
 ## Notes
 
-L'installateur écrit `~/.config/starship.toml`. S'il trouve un fichier Starship non géré par cet installateur, il le sauvegarde avec un suffixe horodaté avant de le remplacer. Les couleurs de Git et du répertoire restent fixes pour conserver leur signification, tandis que l'accent change selon la machine.
+The installer writes `~/.config/starship.toml`. If it finds a Starship configuration file not managed by this installer, it backs it up with a timestamped suffix before replacing it. Git and directory colors remain fixed to preserve their meaning, while the accent color varies by machine.
 
-Le compte root et un compte standard ont chacun leur propre configuration; lance l'installation sous le compte correspondant. Pour la sécurité, inspecte le script et épingle une révision Git avant de le déployer massivement.
+The root account and each regular user account have their own configuration; run the installation under the account you want to configure. For security, inspect the script and pin a Git revision before deploying it broadly.
 
-L'installation utilise l'installateur officiel de Starship, avec un téléchargement HTTPS. Il faut `curl`, et Git doit être installé pour afficher les informations Git.
+The installation uses Starship's official installer, downloading it over HTTPS. `curl` is required, and Git must be installed to display Git information.

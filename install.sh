@@ -6,11 +6,11 @@ set -eu
 ACCENT=${1:-#38BDF8}
 case "$ACCENT" in
   \#[0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f]) ;;
-  *) echo "Erreur: couleur attendue au format '#RRGGBB'." >&2; exit 2 ;;
+  *) echo "Error: expected a color in '#RRGGBB' format." >&2; exit 2 ;;
 esac
 
 if ! command -v curl >/dev/null 2>&1; then
-  echo 'curl est nécessaire pour installer Starship.' >&2
+  echo 'curl is required to install Starship.' >&2
   exit 1
 fi
 
@@ -19,7 +19,7 @@ CONF_DIR="$HOME/.config"
 mkdir -p "$BIN" "$CONF_DIR"
 
 if ! command -v starship >/dev/null 2>&1 && ! [ -x "$BIN/starship" ]; then
-  echo 'Installation de Starship dans ~/.local/bin ...'
+  echo 'Installing Starship in ~/.local/bin ...'
   temp_script=$(mktemp)
   trap 'rm -f "$temp_script"' EXIT HUP INT TERM
   curl -fsSL https://starship.rs/install.sh -o "$temp_script"
@@ -32,7 +32,7 @@ CONF="$CONF_DIR/starship.toml"
 if [ -f "$CONF" ] && ! grep -q '^# Managed by linux-prompt installer$' "$CONF"; then
   backup="$CONF.backup.$(date +%Y%m%d%H%M%S)"
   cp "$CONF" "$backup"
-  echo "Configuration Starship précédente sauvegardée : $backup"
+  echo "Previous Starship configuration backed up: $backup"
 fi
 
 cat > "$CONF" <<'TOML'
@@ -138,11 +138,11 @@ fi
 if [ -n "$bash_profile" ]; then
   if grep -Ev '^[[:space:]]*#' "$bash_profile" |
     grep -Eq '(^|[;&[:space:]])(source|\.)[[:space:]]+([^#]*)(\$HOME/|~/)?\.bashrc([^[:alnum:]_]|$)'; then
-    echo "Le profil Bash $bash_profile charge déjà .bashrc."
+    echo "The Bash profile $bash_profile already loads .bashrc."
   else
     source_line='if [ -n "${BASH_VERSION-}" ] && [ -f "$HOME/.bashrc" ]; then . "$HOME/.bashrc"; fi'
     if [ -t 0 ] || [ -t 2 ]; then
-      printf 'Le profil Bash %s ne charge pas .bashrc. Ajouter la ligne ? [y/N] ' "$bash_profile" >&2
+      printf 'The Bash profile %s does not load .bashrc. Add the line? [y/N] ' "$bash_profile" >&2
       if [ -t 0 ]; then
         IFS= read -r answer || answer=
       else
@@ -151,19 +151,19 @@ if [ -n "$bash_profile" ]; then
       case "$answer" in
         y|Y|yes|YES|Yes)
           printf '\n# Added by linux-prompt installer\n%s\n' "$source_line" >> "$bash_profile"
-          echo "Ajout de l'appel à .bashrc dans $bash_profile."
+          echo "Added the .bashrc sourcing line to $bash_profile."
           ;;
         *)
-          echo "Aucun changement apporté à $bash_profile."
+          echo "No changes made to $bash_profile."
           ;;
       esac
     else
-      printf 'Proposition : ajoute cette ligne à %s pour charger .bashrc dans les shells Bash de connexion :\n%s\n' \
+      printf 'Suggestion: add this line to %s to load .bashrc in Bash login shells:\n%s\n' \
         "$bash_profile" "$source_line"
     fi
   fi
 fi
 
-echo "Installation terminée. Accent : $ACCENT"
-echo 'Ouvre un nouveau shell interactif (ou exécute: exec bash / exec zsh).'
-echo 'Note: cette configuration concerne uniquement le compte utilisateur courant.'
+echo "Installation complete. Accent color: $ACCENT"
+echo 'Open a new interactive shell (or run: exec bash / exec zsh).'
+echo 'Note: this configuration applies only to the current user account.'
