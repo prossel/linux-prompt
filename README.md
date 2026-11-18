@@ -8,9 +8,7 @@ A two-line Bash/Zsh prompt, with a machine-specific accent color and Git informa
 sh install.sh '#38BDF8'
 ```
 
-## Installation from your GitHub repository
-
-After publishing `install.sh` at the root of a public `linux-prompt` repository:
+## Installation from the GitHub repository
 
 ```sh
 curl -fsSL https://raw.githubusercontent.com/prossel/linux-prompt/main/install.sh | sh -s -- '#38BDF8'
