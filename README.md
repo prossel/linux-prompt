@@ -23,6 +23,10 @@ sh install.sh '#38BDF8'
 curl -fsSL https://raw.githubusercontent.com/prossel/linux-prompt/main/install.sh | sh -s -- '#38BDF8'
 ```
 
+## Interactive color preview
+
+Open the [interactive color preview](index.html) in a browser to choose an accent color, see it applied to an example prompt, and copy the matching installation command.
+
 Color examples: `#38BDF8` (blue), `#34D399` (green), `#FBBF24` (orange), `#C4B5FD` (purple), `#FB7185` (pink).
 
 ## Features

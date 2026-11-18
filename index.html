@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="dark">
+    <title>Linux Prompt color preview</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        font-family: ui-sans-serif, system-ui, sans-serif;
+        background: #111827;
+        color: #e5e7eb;
+        --accent: #38bdf8;
+      }
+
+      body {
+        box-sizing: border-box;
+        max-width: 760px;
+        margin: 0 auto;
+        padding: 48px 24px;
+      }
+
+      h1 {
+        margin: 0 0 8px;
+        font-size: clamp(1.8rem, 5vw, 2.5rem);
+      }
+
+      p {
+        color: #9ca3af;
+        line-height: 1.6;
+      }
+
+      .panel {
+        margin-top: 28px;
+        padding: 24px;
+        border: 1px solid #374151;
+        border-radius: 12px;
+        background: #1f2937;
+      }
+
+      .color-control {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+
+      input[type="color"] {
+        width: 56px;
+        height: 48px;
+        padding: 4px;
+        border: 1px solid #4b5563;
+        border-radius: 8px;
+        background: #111827;
+        cursor: pointer;
+      }
+
+      #color-value {
+        font: 600 1rem ui-monospace, SFMono-Regular, Menlo, monospace;
+      }
+
+      .prompt {
+        overflow-x: auto;
+        padding: 20px;
+        border-radius: 8px;
+        background: #111827;
+        font: 500 1rem/1.2 ui-monospace, SFMono-Regular, Menlo, monospace;
+        white-space: nowrap;
+      }
+
+      .prompt.light-preview {
+        background: #f9fafb;
+        color: #111827;
+      }
+
+      .light-preview .directory {
+        color: #1d4ed8;
+      }
+
+      .light-preview .branch {
+        color: #7e22ce;
+      }
+
+      .light-preview .status {
+        color: #a16207;
+      }
+
+      .accent {
+        color: var(--accent);
+        font-weight: 700;
+      }
+
+      .directory {
+        color: #60a5fa;
+      }
+
+      .branch {
+        color: #c084fc;
+        font-weight: 700;
+      }
+
+      .status {
+        color: #facc15;
+        font-weight: 700;
+      }
+
+      .command-row {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+      }
+
+      code {
+        flex: 1;
+        overflow-wrap: anywhere;
+        padding: 12px;
+        border-radius: 8px;
+        background: #111827;
+        color: #d1d5db;
+        font: 0.9rem/1.6 ui-monospace, SFMono-Regular, Menlo, monospace;
+      }
+
+      button {
+        flex: none;
+        padding: 11px 14px;
+        border: 0;
+        border-radius: 8px;
+        background: var(--accent);
+        color: #111827;
+        font: inherit;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      button:focus-visible,
+      input:focus-visible {
+        outline: 2px solid white;
+        outline-offset: 3px;
+      }
+
+      #copy-status {
+        min-height: 1.5em;
+        margin-bottom: 0;
+      }
+
+      @media (max-width: 540px) {
+        body {
+          padding: 32px 16px;
+        }
+
+        .panel {
+          padding: 18px;
+        }
+
+        .command-row {
+          flex-direction: column;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Linux Prompt color preview</h1>
+      <p>Choose an accent color to preview the prompt and get the matching install command.</p>
+
+      <section class="panel" aria-labelledby="color-heading">
+        <h2 id="color-heading">Accent color</h2>
+        <div class="color-control">
+          <label for="accent-picker">Choose a color</label>
+          <input id="accent-picker" type="color" value="#38bdf8">
+          <output id="color-value" for="accent-picker">#38BDF8</output>
+        </div>
+      </section>
+
+      <section class="panel" aria-labelledby="preview-heading">
+        <h2 id="preview-heading">Example prompt</h2>
+        <div class="prompt" aria-label="Example shell prompt">
+          <div><span class="accent">┌─</span><span class="accent">alice</span><span class="accent">@</span><span class="accent">workstation</span>&nbsp;&nbsp;<span class="directory">~/projects/linux-prompt</span><span class="branch"> ⎇ main</span><span class="status"> !?</span></div>
+          <div><span class="accent">└─&gt;</span></div>
+        </div>
+        <p>Accent: username, hostname, frame, and prompt symbol. Git branch and directory colors stay fixed; !? previews modified and untracked files.</p>
+      </section>
+
+      <section class="panel" aria-labelledby="light-preview-heading">
+        <h2 id="light-preview-heading">Example prompt on a light background</h2>
+        <div class="prompt light-preview" aria-label="Example shell prompt on a light background">
+          <div><span class="accent">┌─</span><span class="accent">alice</span><span class="accent">@</span><span class="accent">workstation</span>&nbsp;&nbsp;<span class="directory">~/projects/linux-prompt</span><span class="branch"> ⎇ main</span><span class="status"> !?</span></div>
+          <div><span class="accent">└─&gt;</span></div>
+        </div>
+      </section>
+
+      <section class="panel" aria-labelledby="install-heading">
+        <h2 id="install-heading">Install this prompt</h2>
+        <div class="command-row">
+          <code id="install-command"></code>
+          <button id="copy-command" type="button">Copy command</button>
+        </div>
+        <p id="copy-status" role="status" aria-live="polite"></p>
+      </section>
+    </main>
+
+    <script>
+      const picker = document.querySelector("#accent-picker");
+      const colorValue = document.querySelector("#color-value");
+      const command = document.querySelector("#install-command");
+      const copyButton = document.querySelector("#copy-command");
+      const copyStatus = document.querySelector("#copy-status");
+      const installUrl = "https://raw.githubusercontent.com/prossel/linux-prompt/main/install.sh";
+
+      function updatePreview() {
+        const color = picker.value.toUpperCase();
+        document.documentElement.style.setProperty("--accent", color);
+        colorValue.value = color;
+        colorValue.textContent = color;
+        command.textContent = `curl -fsSL ${installUrl} | sh -s -- '${color}'`;
+        copyStatus.textContent = "";
+      }
+
+      async function copyCommand() {
+        try {
+          await navigator.clipboard.writeText(command.textContent);
+        } catch {
+          const temporaryInput = document.createElement("textarea");
+          temporaryInput.value = command.textContent;
+          temporaryInput.setAttribute("readonly", "");
+          temporaryInput.style.position = "fixed";
+          temporaryInput.style.opacity = "0";
+          document.body.append(temporaryInput);
+          temporaryInput.select();
+          const copied = document.execCommand("copy");
+          temporaryInput.remove();
+          if (!copied) {
+            copyStatus.textContent = "Copy failed. Select and copy the command above.";
+            return;
+          }
+        }
+        copyStatus.textContent = "Command copied.";
+      }
+
+      picker.addEventListener("input", updatePreview);
+      copyButton.addEventListener("click", copyCommand);
+      updatePreview();
+    </script>
+  </body>
+</html>
