@@ -24,9 +24,9 @@ curl -fsSL https://raw.githubusercontent.com/prossel/linux-prompt/main/install.s
 
 ## Interactive color preview
 
-Open the [interactive color preview](https://prossel.github.io/linux-prompt/) in a browser to choose an accent color, see it applied to an example prompt, and copy the matching installation command.
+Open the [interactive color preview](https://prossel.github.io/linux-prompt/) in a browser to choose an accent color and select 24-bit truecolor, 256-color, or 16-color terminal support. Truecolor preserves the exact RGB value; ANSI modes snap to the closest standard palette color and provide the matching installation command. Actual 16-color output can vary with the terminal's configured ANSI theme.
 
-Color examples: `#00BB00` (default green), `#38BDF8` (blue), `#34D399` (mint), `#FBBF24` (orange), `#C4B5FD` (purple), `#FB7185` (pink).
+Color examples: `#00BB00` (default green), `#38BDF8` (blue), `#34D399` (mint), `#FBBF24` (orange), `#C4B5FD` (purple), `#FB7185` (pink). The installer accepts `#RRGGBB`, a 256-color ANSI index from `0` to `255`, or one of Starship's 16 ANSI names (for example, `bright-purple`).
 
 ## Features
 

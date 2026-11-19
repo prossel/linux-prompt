@@ -41,17 +41,30 @@
 
       .color-control {
         display: flex;
+        flex-wrap: wrap;
         align-items: center;
         gap: 16px;
       }
 
-      input[type="color"] {
+      input[type="color"],
+      select {
         width: 56px;
-        height: 48px;
+        min-height: 48px;
         padding: 4px;
         border: 1px solid #4b5563;
         border-radius: 8px;
         background: #111827;
+        color: #e5e7eb;
+      }
+
+      input[type="color"] {
+        cursor: pointer;
+      }
+
+      select {
+        width: auto;
+        padding: 8px;
+        font: inherit;
         cursor: pointer;
       }
 
@@ -161,15 +174,22 @@
   <body>
     <main>
       <h1>Linux Prompt color preview</h1>
-      <p>Choose an accent color to preview the prompt and get the matching install command.</p>
+      <p>Choose an accent color and terminal color mode. Truecolor keeps the exact RGB value; ANSI modes snap to the closest supported color.</p>
 
       <section class="panel" aria-labelledby="color-heading">
         <h2 id="color-heading">Accent color</h2>
         <div class="color-control">
           <label for="accent-picker">Choose a color</label>
           <input id="accent-picker" type="color" value="#00bb00">
-          <output id="color-value" for="accent-picker">#00BB00</output>
+          <label for="color-mode">Terminal color mode</label>
+          <select id="color-mode">
+            <option value="256">256 colors</option>
+            <option value="16">16 colors</option>
+            <option value="truecolor">24-bit truecolor</option>
+          </select>
+          <output id="color-value" for="accent-picker">#00AF00 (ANSI 256 index 34)</output>
         </div>
+        <p>16-color previews use standard ANSI values; your terminal theme may render them differently.</p>
       </section>
 
       <section class="panel" aria-labelledby="preview-heading">
@@ -201,18 +221,83 @@
 
     <script>
       const picker = document.querySelector("#accent-picker");
+      const colorMode = document.querySelector("#color-mode");
       const colorValue = document.querySelector("#color-value");
       const command = document.querySelector("#install-command");
       const copyButton = document.querySelector("#copy-command");
       const copyStatus = document.querySelector("#copy-status");
       const installUrl = "https://raw.githubusercontent.com/prossel/linux-prompt/main/install.sh";
+      const ansi16 = [
+        ["black", "#000000"],
+        ["red", "#CD0000"],
+        ["green", "#00CD00"],
+        ["yellow", "#CDCD00"],
+        ["blue", "#0000EE"],
+        ["purple", "#CD00CD"],
+        ["cyan", "#00CDCD"],
+        ["white", "#E5E5E5"],
+        ["bright-black", "#7F7F7F"],
+        ["bright-red", "#FF0000"],
+        ["bright-green", "#00FF00"],
+        ["bright-yellow", "#FFFF00"],
+        ["bright-blue", "#5C5CFF"],
+        ["bright-purple", "#FF00FF"],
+        ["bright-cyan", "#00FFFF"],
+        ["bright-white", "#FFFFFF"],
+      ].map(([name, hex], index) => ({ name, hex, index }));
+
+      const ansi256 = [];
+      const cubeLevels = [0, 95, 135, 175, 215, 255];
+      for (let red = 0; red < 6; red++) {
+        for (let green = 0; green < 6; green++) {
+          for (let blue = 0; blue < 6; blue++) {
+            const index = 16 + 36 * red + 6 * green + blue;
+            const hex = `#${[red, green, blue]
+              .map((level) => cubeLevels[level].toString(16).padStart(2, "0"))
+              .join("")}`.toUpperCase();
+            ansi256.push({ index, hex });
+          }
+        }
+      }
+      for (let gray = 0; gray < 24; gray++) {
+        const level = 8 + gray * 10;
+        ansi256.push({
+          index: 232 + gray,
+          hex: `#${level.toString(16).padStart(2, "0").repeat(3)}`.toUpperCase(),
+        });
+      }
+      // Prefer fixed extended-palette colors over theme-dependent ANSI colors on ties.
+      ansi256.push(...ansi16);
 
       function updatePreview() {
-        const color = picker.value.toUpperCase();
+        let color;
+        let installColor;
+        let displayValue;
+        if (colorMode.value === "truecolor") {
+          color = picker.value.toUpperCase();
+          installColor = color;
+          displayValue = `${color} (24-bit truecolor)`;
+        } else {
+          const selected = picker.value.match(/[0-9a-f]{2}/gi).map((channel) => parseInt(channel, 16));
+          const palette = colorMode.value === "16" ? ansi16 : ansi256;
+          const closest = palette.reduce((best, candidate) => {
+            const distance = candidate.hex.match(/[0-9a-f]{2}/gi).reduce(
+              (sum, channel, index) => sum + (selected[index] - parseInt(channel, 16)) ** 2,
+              0,
+            );
+            return distance < best.distance ? { ...candidate, distance } : best;
+          }, { distance: Infinity });
+          color = closest.hex;
+          installColor = colorMode.value === "16" ? closest.name : closest.index;
+          displayValue = colorMode.value === "16"
+            ? `${closest.name} (${color})`
+            : `${color} (ANSI 256 index ${closest.index})`;
+        }
+
         document.documentElement.style.setProperty("--accent", color);
-        colorValue.value = color;
-        colorValue.textContent = color;
-        command.textContent = `curl -fsSL ${installUrl} | sh -s -- '${color}'`;
+        colorValue.value = displayValue;
+        colorValue.textContent = displayValue;
+        command.textContent = `curl -fsSL ${installUrl} | sh -s -- '${installColor}'`;
         copyStatus.textContent = "";
       }
 
@@ -238,6 +323,7 @@
       }
 
       picker.addEventListener("input", updatePreview);
+      colorMode.addEventListener("change", updatePreview);
       copyButton.addEventListener("click", copyCommand);
       updatePreview();
     </script>

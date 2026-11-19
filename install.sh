@@ -2,11 +2,15 @@
 set -eu
 
 # Usage: sh install.sh [COLOR]
-# Example: sh install.sh '#00BB00'
+# Examples: sh install.sh '#00BB00'; sh install.sh 201; sh install.sh bright-purple
 ACCENT=${1:-#00BB00}
 case "$ACCENT" in
   \#[0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f]) ;;
-  *) echo "Error: expected a color in '#RRGGBB' format." >&2; exit 2 ;;
+  [0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]) ;;
+  black|red|green|yellow|blue|purple|cyan|white|\
+  bright-black|bright-red|bright-green|bright-yellow|\
+  bright-blue|bright-purple|bright-cyan|bright-white) ;;
+  *) echo "Error: expected '#RRGGBB', a 256-color index (0-255), or a 16-color ANSI name." >&2; exit 2 ;;
 esac
 
 if ! command -v curl >/dev/null 2>&1; then
@@ -37,7 +41,7 @@ fi
 
 cat > "$CONF" <<'TOML'
 # Managed by linux-prompt installer
-# Accent color: changed by rerunning install.sh with a new #RRGGBB
+# Accent color: rerun install.sh with #RRGGBB, an ANSI index (0-255), or an ANSI name.
 palette = "linux_prompt"
 add_newline = true
 format = """
