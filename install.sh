@@ -38,19 +38,23 @@ fi
 cat > "$CONF" <<'TOML'
 # Managed by linux-prompt installer
 # Accent color: changed by rerunning install.sh with a new #RRGGBB
+palette = "linux_prompt"
 add_newline = true
 format = """
-[┌─](bold ACCENT_COLOR)$username[@](bold ACCENT_COLOR)$hostname[  ]()$directory$git_branch$git_status$cmd_duration
-[└─](bold ACCENT_COLOR)$character
+[┌─](bold accent)$username[@](bold accent)$hostname[  ]()$directory$git_branch$git_status$cmd_duration
+[└─](bold accent)$character
 """
+
+[palettes.linux_prompt]
+accent = "ACCENT_COLOR"
 
 [username]
 show_always = true
-format = '[$user](bold ACCENT_COLOR)'
+format = '[$user](bold accent)'
 
 [hostname]
 ssh_only = false
-format = '[$hostname](bold ACCENT_COLOR)'
+format = '[$hostname](bold accent)'
 trim_at = '.'
 
 [directory]
@@ -80,7 +84,7 @@ min_time = 2000
 format = ' [took $duration](dimmed yellow)'
 
 [character]
-success_symbol = '[>](bold ACCENT_COLOR)'
+success_symbol = '[>](bold accent)'
 error_symbol = '[>](bold red)'
 TOML
 # ACCENT must be validated above before substitution.

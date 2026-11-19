@@ -43,7 +43,7 @@ Color examples: `#00BB00` (default green), `#38BDF8` (blue), `#34D399` (mint), `
 
 ## Notes
 
-The installer writes `~/.config/starship.toml`. If it finds a Starship configuration file not managed by this installer, it backs it up with a timestamped suffix before replacing it. Git and directory colors remain fixed to preserve their meaning, while the accent color varies by machine.
+The installer writes `~/.config/starship.toml`, storing the selected accent in one named Starship palette entry. If it finds a Starship configuration file not managed by this installer, it backs it up with a timestamped suffix before replacing it. Git and directory colors remain fixed to preserve their meaning, while the accent color varies by machine.
 
 The root account and each regular user account have their own configuration; run the installation under the account you want to configure. For security, inspect the script and pin a Git revision before deploying it broadly.
 
